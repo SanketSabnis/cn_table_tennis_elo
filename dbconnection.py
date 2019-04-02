@@ -49,26 +49,36 @@ def get_player(player_id):
 
 
 def save_player(player_dict):
-    supported_fields = ["id", "name", "rating", "created_at"]
+    supported_fields = ["id", "name", "rating", "matches_played", "created_at"]
     keys = list(player_dict)
     for field in keys:
         if field not in supported_fields:
             player_dict.pop(field, None)
-
     if not player_dict.get("id"):
         cursor.execute("""
             INSERT into players
-            (name, rating, created_at)
+            (name, rating, matches_played, created_at)
             VALUES
-            (?, ?, ?)
-        """, (player_dict["name"], player_dict["rating"], datetime.datetime.now()))
+            (?, ?, ?, ?)
+        """, (
+            player_dict["name"],
+            player_dict["rating"],
+            player_dict.get("matches_played") or 0,
+            datetime.datetime.now()
+        ))
         player_id = cursor.lastrowid
     else:
         player_id = player_dict.pop("id")
         cursor.execute("""
             UPDATE players
-            SET name = ?, rating = ?, updated_at = ?
+            SET name = ?, rating = ?, updated_at = ?, matches_played = ?
             WHERE id = ?
-        """, (player_dict["name"], player_dict["rating"], datetime.datetime.now(), player_id))
+        """, (
+            player_dict["name"],
+            player_dict["rating"],
+            datetime.datetime.now(),
+            player_dict["matches_played"],
+            player_id
+        ))
     db.commit()
     return get_player(player_id)

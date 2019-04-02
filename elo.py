@@ -89,12 +89,15 @@ class Game():
     def show_ratings():
         ratings = dbconnection.get_ratings()
         # rating_list = sorted(ratings, key=lambda x: x["rating"], reverse=True)
-        print("{0: <25} {1: <8}".format("Name", "Rating"))
-
+        print("{0: <25} {1: <8} {2: <5}".format("Name", "Rating", "Matches Played"))
         for player in ratings:
             if player["name"] in inactive_players:
                 continue
-            print("{0: <25} {1: <8}".format(player["name"], player["rating"]))
+            print("{0: <25} {1: <8} {2: <5}".format(
+                player["name"],
+                player["rating"],
+                player["matches_played"]
+            ))
         print("=====================================")
         return ratings
 
@@ -120,6 +123,7 @@ class Player():
 
     def set_rating(self, rating):
         self.rating = rating
+        self.matches_played = getattr(self, "matches_played", 0) + 1
         self.save()
 
     def save(self, ):
