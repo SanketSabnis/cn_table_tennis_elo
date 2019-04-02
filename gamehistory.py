@@ -5,7 +5,7 @@ import datetime
 
 def reload_game_history():
     clear_db()
-    sanket = Player(name="Sanket")
+    sanket = Player(name="Sanket R")
     spencer = Player(name="Spencer")
     aaron = Player(name="Aaron")
     vince = Player(name="Vince")
@@ -13,12 +13,17 @@ def reload_game_history():
     hector = Player(name="Hector")
     lauren = Player(name="Lauren")
     jeff = Player(name="Jeff")
-    adam = Player(name="Adam")
+    adam = Player(name="Adam Hua")
     lee = Player(name="Lee")
     kim = Player(name="Kim")
     jeremy = Player(name="Jeremy")
     nick = Player(name="Nick")
     allgood = Player(name="Adam Allgood")
+    sanket_left = Player(name="Sanket L")
+    beth = Player(name="Beth")
+    joel = Player(name="Joel")
+    dan = Player(name="Dan")
+    sean = Player(name="Sean")
     print("Initial Ratings")
     Game.show_ratings()
     season1 = [
@@ -120,4 +125,13 @@ def reload_game_history():
     ]
     record_matches(season5, datetime.datetime(2019, 2, 7))
     print("End of Season 5")
+    Game.show_ratings()
+    season6 = [
+        [sanket, sanket_left],
+        [matt, jeff],
+        [aaron, beth],
+        [sanket, matt]
+    ]
+    record_matches(season6, datetime.datetime(2019, 4, 1))
+    print("Season 6 -- Live")
     Game.show_ratings()
