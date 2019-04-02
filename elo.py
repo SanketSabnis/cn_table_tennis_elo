@@ -80,7 +80,7 @@ class Game():
     @staticmethod
     def record_match(player, opponent, recorded_at=None):
         result = record_elo(player.rating, opponent.rating)
-        player.set_rating(result[0])
+        player.set_rating(result[0], winner=True)
         opponent.set_rating(result[1])
         if not recorded_at:
             recorded_at = datetime.datetime.now()
@@ -89,14 +89,21 @@ class Game():
     def show_ratings():
         ratings = dbconnection.get_ratings()
         # rating_list = sorted(ratings, key=lambda x: x["rating"], reverse=True)
-        print("{0: <25} {1: <8} {2: <5}".format("Name", "Rating", "Matches Played"))
+        print("{0: <25} {1: <8} {2: <7} {3: <5} {4: <7} {5: <8}".format(
+            "Name", "Rating", "Played", "Wins", "Losses", "Win Rate"))
         for player in ratings:
             if player["name"] in inactive_players:
                 continue
-            print("{0: <25} {1: <8} {2: <5}".format(
+            winrate = 0.0
+            if player["matches_played"]:
+                winrate = 100 * float((player["wins"] or 0) / player["matches_played"])
+            print("{0: <25} {1: <8} {2: <7} {3: <5} {4: <7} {5: <1.2f}%".format(
                 player["name"],
                 player["rating"],
-                player["matches_played"]
+                player["matches_played"],
+                player["wins"] or 0,
+                player["losses"] or 0,
+                winrate
             ))
         print("=====================================")
         return ratings
@@ -121,9 +128,15 @@ class Player():
         player_dict = dbconnection.get_player(player_id)
         return Player(**player_dict)
 
-    def set_rating(self, rating):
+    def set_rating(self, rating, winner=False):
         self.rating = rating
         self.matches_played = getattr(self, "matches_played", 0) + 1
+        if winner:
+            self.wins = getattr(self, "wins", 0) + 1
+            self.losses = getattr(self, "losses", 0)
+        else:
+            self.losses = getattr(self, "losses", 0) + 1
+            self.wins = getattr(self, "wins", 0)
         self.save()
 
     def save(self, ):
