@@ -6,15 +6,29 @@ import statistics
 import gamehistory
 
 K = 64
+C = 800
+K_ = 20
+C_ = 200
+
 rating_default = 1200
-inactive_players = ["Kim", "Lee"]
+inactive_players = ["Kim", "Lee", "Spencer"]
 
 
 def record_elo(r1, r2):
-    e1 = r1 / float(r1 + r2)
-    e2 = r2 / float(r1 + r2)
+    R1 = 10 ** (r1 / C)
+    R2 = 10 ** (r2 / C)
+    e1 = R1 / float(R1 + R2)
+    e2 = R2 / float(R1 + R2)
     new_r1 = int(round(r1 + (K * (1 - e1))))
     new_r2 = int(round(r2 + (K * (0 - e2))))
+    return new_r1, new_r2
+
+
+def record_elo_(r1, r2):
+    e1 = r1 + (K_ / 2) * (1 - 0 + 0.5 * ((r2 - r1) / float(C_)))
+    e2 = r2 + (K_ / 2) * (0 - 1 + 0.5 * ((r1 - r2) / float(C_)))
+    new_r1 = int(round(e1))
+    new_r2 = int(round(e2))
     return new_r1, new_r2
 
 
@@ -84,7 +98,7 @@ class Game():
         opponent.set_rating(result[1])
         if not recorded_at:
             recorded_at = datetime.datetime.now()
-        dbconnection.add_game_log(player.id, opponent.id, recorded_at)
+        dbconnection.add_game_log(player, opponent, recorded_at)
 
     def show_ratings():
         ratings = dbconnection.get_ratings()
@@ -144,8 +158,27 @@ class Player():
         if player.get("id") and not hasattr(self, "id"):
             self.id = player["id"]
 
+    def get_game_history(self):
+        player_history = dbconnection.get_player_history(self.id)
+        formatted_records = [("2017-11-1 00:00:00", 1200)]
+        for record in player_history:
+            if record["winner_id"] == self.id:
+                formatted_records.append(
+                    (record["recorded_at"], record["winner_rating"])
+                )
+            else:
+                formatted_records.append(
+                    (record["recorded_at"], record["loser_rating"])
+                )
+        print("{0: <25} {1: <8}".format("Date", "Rating"))
+        for record in formatted_records:
+            print("{0: <25} {1: <8}".format(record[0].split(" ")[0], record[1]))
+
+        return formatted_records
+
+
 
 if __name__ == "__main__":
-    ratings = Game.show_ratings()
+    #ratings = Game.show_ratings()
     gamehistory.reload_game_history()
     #find_pairings(ratings)

@@ -23,10 +23,10 @@ def clear_db():
 def add_game_log(winner, loser, recorded_at):
     cursor.execute("""
         INSERT into game_history
-        (winner_id, loser_id, recorded_at, created_at)
+        (winner_id, loser_id, winner_rating, loser_rating, recorded_at, created_at)
         VALUES
-        (?, ?, ?, ?)
-    """, (winner, loser, recorded_at, datetime.datetime.now()))
+        (?, ?, ?, ?, ?, ?)
+    """, (winner.id, loser.id, winner.rating, loser.rating, recorded_at, datetime.datetime.now()))
     db.commit()
 
 
@@ -86,3 +86,13 @@ def save_player(player_dict):
         ))
     db.commit()
     return get_player(player_id)
+
+
+def get_player_history(player_id):
+    cursor.execute("""
+        SELECT * FROM game_history
+        WHERE winner_id = ? or loser_id = ?
+        ORDER by id
+    """, (player_id, player_id))
+    result = cursor.fetchall()
+    return result

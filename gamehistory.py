@@ -5,7 +5,7 @@ import datetime
 
 def reload_game_history():
     clear_db()
-    sanket = Player(name="Sanket R")
+    sanket = Player(name="Sanket-Right")
     spencer = Player(name="Spencer")
     aaron = Player(name="Aaron")
     vince = Player(name="Vince")
@@ -13,19 +13,19 @@ def reload_game_history():
     hector = Player(name="Hector")
     lauren = Player(name="Lauren")
     jeff = Player(name="Jeff")
-    adam = Player(name="Adam Hua")
+    adam = Player(name="Adam-Hua")
     lee = Player(name="Lee")
     kim = Player(name="Kim")
     jeremy = Player(name="Jeremy")
     nick = Player(name="Nick")
-    allgood = Player(name="Adam Allgood")
-    sanket_left = Player(name="Sanket L")
+    allgood = Player(name="Adam-Allgood")
+    sanket_left = Player(name="Sanket-Left")
     beth = Player(name="Beth")
     joel = Player(name="Joel")
     dan = Player(name="Dan")
     sean = Player(name="Sean")
     print("Initial Ratings")
-    Game.show_ratings()
+    # Game.show_ratings()
     season1 = [
         [sanket, lauren],
         [aaron, vince],
@@ -37,7 +37,7 @@ def reload_game_history():
     ]
     print("End of Season 1\n")
     record_matches(season1, datetime.datetime(2018, 1, 21))
-    Game.show_ratings()
+    # Game.show_ratings()
     season2 = [
         # Group A
         [spencer, vince],
@@ -64,13 +64,11 @@ def reload_game_history():
         # PlayOff
         [spencer, aaron],
         [sanket, vince],
-        [aaron, vince]
+        [aaron, vince],
+        [sanket, spencer]
     ]
     print("End of Season 2\n")
     record_matches(season2, datetime.datetime(2018, 3, 21))
-    Game.show_ratings()
-    print("Finals\n")
-    record_matches([[sanket, spencer]], datetime.datetime(2018, 3, 21))
     Game.show_ratings()
     season3 = [
         [sanket, hector],
@@ -90,6 +88,7 @@ def reload_game_history():
     print("End of Season 3\n")
     record_matches(season3, datetime.datetime(2018, 5, 21))
     Game.show_ratings()
+
     season4 = [
         [hector, matt],
         [matt, hector],
@@ -101,6 +100,7 @@ def reload_game_history():
     print("End of Season 4 Misc Games")
     record_matches(season4, datetime.datetime(2018, 8, 15))
     Game.show_ratings()
+
     season5 = [
         [matt, jeremy],
         [nick, adam],
@@ -130,8 +130,34 @@ def reload_game_history():
         [sanket, sanket_left],
         [matt, jeff],
         [aaron, beth],
-        [sanket, matt]
+        [sanket, matt],
+        [allgood, sean],
+        [nick, dan],
+        [lauren, jeremy],
+        [sanket_left, jeff],
+        [lauren, aaron],
+        [nick, hector],
+        [dan, aaron],
+        [jeremy, beth],
+        [hector, jeremy],
+        [adam, vince],
+        [allgood, adam],
+        [vince, sean],
+        [vince, matt],
+        [lauren, allgood],
+        [hector, vince]
+
     ]
     record_matches(season6, datetime.datetime(2019, 4, 1))
     print("Season 6 -- Live")
     Game.show_ratings()
+
+    misc_games = [
+        [aaron, adam],
+        [hector, adam],
+
+    ]
+    record_matches(misc_games, datetime.datetime(2019, 4, 1))
+    Game.show_ratings()
+
+
